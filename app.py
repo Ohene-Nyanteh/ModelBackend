@@ -7,7 +7,8 @@ This is a temporary script file.
 """
 import os
 import uuid
-from flask import Flask, request
+from flask import Flask, request, jsonify
+import json
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -46,12 +47,13 @@ def predict():
     result = high_stroke.predict(np.expand_dims(resize/255, 0))
     result_1 = Park_scabies.predict(np.expand_dims(resize/255, 0))
 
+
     result_2 = {
-        'stroke_results': result,
-        'park_results': result_1
+        'stroke_results': result.tolist(),  # Convert NumPy array to list
+        'park_results': result_1.tolist()    # Convert NumPy array to list
     }
 
-    return result_2
+    return jsonify(result_2) 
 
 
 if __name__ == '__main__':
