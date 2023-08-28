@@ -6,9 +6,9 @@ This is a temporary script file.
 
 """
 from flask import Flask, request
+import os
 import numpy as np
 from tensorflow.keras.model import load_model
-import numpy as np
 
 app = Flask(__name__)
 
@@ -24,17 +24,17 @@ def predict():
     imagefile = request.files['']
     image_path = './Images/' + imagefile.filename
     imagefile.save(image_path)
-    high_stroke = load_model(os.path.join('models','high_stroke.h5'))
-    Park_scabies = load_model(os.path.join('models','Park_ScabiesModel.h5'))
+    high_stroke = load_model(os.path.join('models', 'high_stroke.h5'))
+    Park_scabies = load_model(os.path.join('models', 'Park_ScabiesModel.h5'))
 
     result = high_stroke.predict(np.expand_dims(image_path/255, 0))
     result_1 = Park_scabies.predict(np.expand_dims(image_path/255, 0))
 
     result_2 = {
-    stroke_results: result,
-    park_results = result_1
+        'stroke_results': result,
+        'park_results': result_1
     }
-    
+
     return result_2
 
 
