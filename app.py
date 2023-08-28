@@ -21,7 +21,7 @@ def hello_world():
 # prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
-    imagefile = request.files['']
+    imagefile = request.files['imagefile']
     image_path = './Images/' + imagefile.filename
     imagefile.save(image_path)
     high_stroke = load_model(os.path.join('models', 'high_stroke.h5'))
