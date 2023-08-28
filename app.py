@@ -9,6 +9,7 @@ from flask import Flask, request
 import cv2
 import os
 import numpy as np
+import datetime
 from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
@@ -22,12 +23,18 @@ def hello_world():
 # prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
+    now = datetime.datetime.now()
     imagefile = request.files['imagefile']
-    image_path = './Images/' + imagefile.filename
+    image_path = './Images/' +  now + imagefile.filename
+    imagefile.save(image_path)
+    print(f"""
+
+    IMAGE PATH: {image_path}
+
+    
+    """)
     img = cv2.imread(image_path)
     resize = tf.image.resize(img, (256, 256))
-    print()
-    imagefile.save(image_path)
     high_stroke = load_model(os.path.join('models', 'high_stroke.h5'))
     Park_scabies = load_model(os.path.join('models', 'Park_ScabiesModel.h5'))
 
