@@ -23,6 +23,7 @@ def hello_world():
 def predict():
     imagefile = request.files['imagefile']
     image_path = './Images/' + imagefile.filename
+    print(image_path)
     imagefile.save(image_path)
     high_stroke = load_model(os.path.join('models', 'high_stroke.h5'))
     Park_scabies = load_model(os.path.join('models', 'Park_ScabiesModel.h5'))
