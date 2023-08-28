@@ -8,7 +8,7 @@ This is a temporary script file.
 from flask import Flask, request
 import os
 import numpy as np
-from tensorflow.keras.model import load_model
+from tensorflow.keras.models import load_model
 
 app = Flask(__name__)
 
