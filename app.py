@@ -5,14 +5,15 @@ Spyder Editor
 This is a temporary script file.
 
 """
+import os
+import uuid
 from flask import Flask, request
 import cv2
-import os
 import numpy as np
-import datetime
-from tensorflow.keras.models import load_model
+import tensorflow as tf
 
 app = Flask(__name__)
+
 
 
 @app.route('/', methods=['GET'])
@@ -23,9 +24,10 @@ def hello_world():
 # prediction route
 @app.route('/predict', methods=['POST'])
 def predict():
-    now = datetime.datetime.now()
+    now = uuid.uuid4()
     imagefile = request.files['imagefile']
-    image_path = './Images/' +  now + imagefile.filename
+    image_path = 'Images/' + str(now) + imagefile.filename
+    os.makedirs('Images', exist_ok=True) 
     imagefile.save(image_path)
     print(f"""
 
@@ -33,10 +35,13 @@ def predict():
 
     
     """)
+
+    
     img = cv2.imread(image_path)
+    img = tf.convert_to_tensor(img, dtype=tf.float32) 
     resize = tf.image.resize(img, (256, 256))
-    high_stroke = load_model(os.path.join('models', 'high_stroke.h5'))
-    Park_scabies = load_model(os.path.join('models', 'Park_ScabiesModel.h5'))
+    high_stroke = tf.keras.models.load_model(os.path.join('models', 'high_stroke.h5'))
+    Park_scabies = tf.keras.models.load_model(os.path.join('models', 'Park_ScabiesModel.h5'))
 
     result = high_stroke.predict(np.expand_dims(resize/255, 0))
     result_1 = Park_scabies.predict(np.expand_dims(resize/255, 0))
