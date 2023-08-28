@@ -6,6 +6,7 @@ This is a temporary script file.
 
 """
 from flask import Flask, request
+import cv2
 import os
 import numpy as np
 from tensorflow.keras.models import load_model
@@ -23,13 +24,15 @@ def hello_world():
 def predict():
     imagefile = request.files['imagefile']
     image_path = './Images/' + imagefile.filename
-    print(image_path)
+    img = cv2.imread(image_path)
+    resize = tf.image.resize(img, (256, 256))
+    print()
     imagefile.save(image_path)
     high_stroke = load_model(os.path.join('models', 'high_stroke.h5'))
     Park_scabies = load_model(os.path.join('models', 'Park_ScabiesModel.h5'))
 
-    result = high_stroke.predict(np.expand_dims(image_path/255, 0))
-    result_1 = Park_scabies.predict(np.expand_dims(image_path/255, 0))
+    result = high_stroke.predict(np.expand_dims(resize/255, 0))
+    result_1 = Park_scabies.predict(np.expand_dims(resize/255, 0))
 
     result_2 = {
         'stroke_results': result,
